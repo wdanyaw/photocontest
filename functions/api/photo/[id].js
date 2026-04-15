@@ -26,7 +26,8 @@ export async function onRequestGet({ params, env }) {
 
     const photoRes = await fetch(fileUrl);
     if (!photoRes.ok) {
-      return new Response(`Ошибка загрузки фото: ${photoRes.status}`, { status: 502 });
+      const body = await photoRes.text();
+      return new Response(`Ошибка загрузки фото: ${photoRes.status} | URL: ${fileUrl} | Body: ${body}`, { status: 502 });
     }
 
     const contentType = photoRes.headers.get('Content-Type') || '';
