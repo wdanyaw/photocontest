@@ -503,8 +503,6 @@
 
         if (state.phase === 'VOTING') {
           await loadVoting();
-        } else if (state.phase === 'ARCHIVE') {
-          await loadArchive();
         } else {
           renderIdle();
         }
