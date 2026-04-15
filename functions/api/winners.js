@@ -4,13 +4,15 @@ import { bitrix, bxField, json, jsonError } from './_bitrix.js';
 
 export async function onRequestGet({ env, data }) {
   try {
+    const toUpperField = f => f.replace(/^ufCrm(\d+)_/, (_, n) => `UF_CRM_${n}_`);
+
     const res = await bitrix(env, 'crm.item.list', {
       entityTypeId: env.ENTITY_TYPE_ID,
       filter: {
         stageId: env.WINNER_STAGE_ID,
-        [env.FIELD_IS_WINNER]: 'Y',
+        [toUpperField(env.FIELD_IS_WINNER)]: 'Y',
       },
-      order: { [env.FIELD_CONTEST_DATE]: 'desc' },
+      order: { [toUpperField(env.FIELD_CONTEST_DATE)]: 'desc' },
     });
 
     const items = res.items || [];
