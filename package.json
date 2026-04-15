@@ -1,0 +1,14 @@
+{
+  "name": "photocontest",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev public --d1=DB",
+    "deploy": "wrangler pages deploy public",
+    "db:init": "wrangler d1 execute photocontest --file=./schema.sql",
+    "db:init:remote": "wrangler d1 execute photocontest --remote --file=./schema.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^4.83.0"
+  }
+}
