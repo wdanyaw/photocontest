@@ -67,6 +67,17 @@ export async function validateAuth(domain, authId) {
   }
 }
 
+// Конвертирует имя поля из верхнего регистра в camelCase как возвращает Bitrix24 REST API.
+// UF_CRM_22_1776281092 → ufCrm22_1776281092
+export function bxField(item, fieldName) {
+  if (!fieldName) return undefined;
+  // Попробуем как есть
+  if (item[fieldName] !== undefined) return item[fieldName];
+  // Конвертируем UF_CRM_N_xxx → ufCrmN_xxx
+  const camel = fieldName.replace(/^UF_CRM_(\d+)_/, (_, n) => `ufCrm${n}_`);
+  return item[camel];
+}
+
 // Универсальный JSON-ответ.
 export function json(obj, status = 200) {
   return new Response(JSON.stringify(obj), {

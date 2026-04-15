@@ -1,11 +1,10 @@
 // GET /api/participants — возвращает участников текущего конкурса (стадия 3).
 // Имена НЕ возвращаются пока голосование активно — для анонимности.
 
-import { bitrix, json, jsonError } from './_bitrix.js';
+import { bitrix, bxField, json, jsonError } from './_bitrix.js';
 
 export async function onRequestGet({ env, data }) {
   try {
-    // Проверим фазу: имена можно показывать только после закрытия голосования
     const mainCard = await bitrix(env, 'crm.item.get', {
       entityTypeId: env.ENTITY_TYPE_ID,
       id: env.MAIN_CARD_ID,
@@ -19,8 +18,7 @@ export async function onRequestGet({ env, data }) {
 
     const items = res.items || [];
 
-    // Проверим, голосовал ли текущий пользователь
-    const contestId = items[0]?.[env.FIELD_CONTEST_NUM];
+    const contestId = items[0] ? bxField(items[0], env.FIELD_CONTEST_NUM) : null;
     let userVote = null;
     if (contestId != null) {
       const voteRow = await env.DB.prepare(
@@ -31,12 +29,11 @@ export async function onRequestGet({ env, data }) {
 
     const participants = items.map(item => ({
       id: String(item.id),
-      // Фото отдаём через proxy /api/photo/:id чтобы не светить вебхук
       photoUrl: `/api/photo/${item.id}?auth_id=${encodeURIComponent(data.authId)}&domain=${encodeURIComponent(data.domain)}`,
-      caption: item[env.FIELD_CAPTION] || '',
-      participantNum: item[env.FIELD_PARTICIPANT_NUM] ?? null,
-      voteCount: Number(item[env.FIELD_VOTE_COUNT] || 0),
-      name: isVoting ? null : (item[env.FIELD_NAME] || null),
+      caption: bxField(item, env.FIELD_CAPTION) || '',
+      participantNum: bxField(item, env.FIELD_PARTICIPANT_NUM) ?? null,
+      voteCount: Number(bxField(item, env.FIELD_VOTE_COUNT) || 0),
+      name: isVoting ? null : (bxField(item, env.FIELD_NAME) || null),
     }));
 
     return json({

@@ -1,7 +1,6 @@
 // GET /api/winners — архив победителей всех прошедших конкурсов.
-// Читаем из WINNER_STAGE_ID элементы с Победитель=Да, группируем по номеру конкурса.
 
-import { bitrix, json, jsonError } from './_bitrix.js';
+import { bitrix, bxField, json, jsonError } from './_bitrix.js';
 
 export async function onRequestGet({ env, data }) {
   try {
@@ -18,26 +17,25 @@ export async function onRequestGet({ env, data }) {
     const groups = new Map();
 
     for (const item of items) {
-      const contestNum = item[env.FIELD_CONTEST_NUM] ?? 'unknown';
+      const contestNum = bxField(item, env.FIELD_CONTEST_NUM) ?? 'unknown';
       const key = String(contestNum);
       if (!groups.has(key)) {
         groups.set(key, {
           contestNum,
-          date: item[env.FIELD_CONTEST_DATE] || null,
+          date: bxField(item, env.FIELD_CONTEST_DATE) || null,
           winners: [],
         });
       }
       groups.get(key).winners.push({
         id: String(item.id),
         photoUrl: `/api/photo/${item.id}?auth_id=${encodeURIComponent(data.authId)}&domain=${encodeURIComponent(data.domain)}`,
-        caption: item[env.FIELD_CAPTION] || '',
-        participantNum: item[env.FIELD_PARTICIPANT_NUM] ?? null,
-        voteCount: Number(item[env.FIELD_VOTE_COUNT] || 0),
-        name: item[env.FIELD_NAME] || '',
+        caption: bxField(item, env.FIELD_CAPTION) || '',
+        participantNum: bxField(item, env.FIELD_PARTICIPANT_NUM) ?? null,
+        voteCount: Number(bxField(item, env.FIELD_VOTE_COUNT) || 0),
+        name: bxField(item, env.FIELD_NAME) || '',
       });
     }
 
-    // Сортируем от новой даты к старой
     const contests = Array.from(groups.values()).sort((a, b) => {
       const da = a.date ? new Date(a.date).getTime() : 0;
       const db = b.date ? new Date(b.date).getTime() : 0;

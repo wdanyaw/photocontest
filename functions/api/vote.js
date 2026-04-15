@@ -1,9 +1,6 @@
 // POST /api/vote — обработка голоса.
-// Защита от дубликатов — UNIQUE constraint в D1.
-// Атомарный инкремент счётчика — ON CONFLICT в D1.
-// Синхронизация с Bitrix24 — через callBatch (1 HTTP-запрос для всех участников).
 
-import { bitrix, bitrixBatch, json, jsonError } from './_bitrix.js';
+import { bitrix, bitrixBatch, bxField, json, jsonError } from './_bitrix.js';
 
 export async function onRequestPost({ request, env, data }) {
   try {
@@ -20,7 +17,7 @@ export async function onRequestPost({ request, env, data }) {
       return jsonError(403, 'Голосование сейчас не активно');
     }
 
-    // 2. Получаем всех участников (нужно для contest_id и последующего batch update)
+    // 2. Получаем всех участников
     const list = await bitrix(env, 'crm.item.list', {
       entityTypeId: env.ENTITY_TYPE_ID,
       filter: { stageId: env.STAGE_3_ID },
@@ -29,10 +26,10 @@ export async function onRequestPost({ request, env, data }) {
     const target = items.find(p => String(p.id) === participantId);
     if (!target) return jsonError(404, 'Участник не найден в текущем конкурсе');
 
-    const contestId = String(target[env.FIELD_CONTEST_NUM] ?? '');
+    const contestId = String(bxField(target, env.FIELD_CONTEST_NUM) ?? '');
     if (!contestId) return jsonError(500, 'У участника не заполнен Номер конкурса');
 
-    // 3. Пытаемся вставить голос. UNIQUE(user_id, contest_id) защитит от дубля.
+    // 3. Вставляем голос (UNIQUE защита от дублей)
     try {
       await env.DB.prepare(
         'INSERT INTO votes (user_id, contest_id, participant_id) VALUES (?, ?, ?)'
@@ -45,7 +42,7 @@ export async function onRequestPost({ request, env, data }) {
       throw e;
     }
 
-    // 4. Атомарный инкремент счётчика голосов
+    // 4. Атомарный инкремент счётчика
     await env.DB.prepare(`
       INSERT INTO participant_counts (participant_id, contest_id, vote_count)
       VALUES (?, ?, 1)
@@ -53,7 +50,7 @@ export async function onRequestPost({ request, env, data }) {
       DO UPDATE SET vote_count = vote_count + 1
     `).bind(participantId, contestId).run();
 
-    // 5. Читаем актуальные счётчики, определяем победителей (может быть ничья)
+    // 5. Читаем счётчики, определяем победителей
     const counts = await env.DB.prepare(
       'SELECT participant_id, vote_count FROM participant_counts WHERE contest_id = ?'
     ).bind(contestId).all();
@@ -65,7 +62,7 @@ export async function onRequestPost({ request, env, data }) {
       if (row.vote_count > maxVotes) maxVotes = row.vote_count;
     }
 
-    // 6. Batch-обновляем поля в Bitrix24: vote_count и is_winner для всех участников
+    // 6. Batch-обновляем поля в Bitrix24
     const cmd = {};
     for (const p of items) {
       const pid = String(p.id);
