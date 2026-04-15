@@ -12,7 +12,9 @@ export async function onRequestGet({ params, env }) {
       id,
     });
 
-    const photoField = item.item?.[env.FIELD_PHOTO];
+    // Bitrix24 возвращает поля в camelCase: UF_CRM_22_xxx → ufCrm22_xxx
+    const fieldKey = env.FIELD_PHOTO.replace(/^UF_CRM_(\d+)_/, (_, n) => `ufCrm${n}_`);
+    const photoField = item.item?.[fieldKey] ?? item.item?.[env.FIELD_PHOTO];
     const file = Array.isArray(photoField) ? photoField[0] : photoField;
     if (!file) return new Response(JSON.stringify({ error: 'no photo field', item: item.item }), { status: 404, headers: { 'Content-Type': 'application/json' } });
 
