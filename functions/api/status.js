@@ -27,7 +27,7 @@ export async function onRequestGet({ env }) {
 
     const phase = winners.items?.length > 0 ? 'ARCHIVE' : 'IDLE';
     return json({ phase });
-  } catch (e) {
-    return jsonError(500, e.message);
+  } catch {
+    return jsonError(500, 'Внутренняя ошибка сервера');
   }
 }

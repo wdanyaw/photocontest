@@ -83,7 +83,7 @@ export async function onRequestPost({ request, env, data }) {
     await bitrixBatch(env, cmd);
 
     return json({ success: true, counts: countsByPid, userVote: participantId });
-  } catch (e) {
-    return jsonError(500, e.message);
+  } catch {
+    return jsonError(500, 'Внутренняя ошибка сервера');
   }
 }

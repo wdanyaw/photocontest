@@ -43,7 +43,7 @@ export async function onRequestGet({ env, data }) {
     });
 
     return json({ contests });
-  } catch (e) {
-    return jsonError(500, e.message);
+  } catch {
+    return jsonError(500, 'Внутренняя ошибка сервера');
   }
 }

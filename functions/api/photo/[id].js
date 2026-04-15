@@ -27,8 +27,7 @@ export async function onRequestGet({ params, env }) {
 
     const photoRes = await fetch(fileUrl);
     if (!photoRes.ok) {
-      const body = await photoRes.text();
-      return new Response(`Ошибка загрузки фото: ${photoRes.status} | URL: ${fileUrl} | Body: ${body}`, { status: 502 });
+      return new Response('Ошибка загрузки фото', { status: 502 });
     }
 
     const contentType = photoRes.headers.get('Content-Type') || '';
@@ -40,7 +39,7 @@ export async function onRequestGet({ params, env }) {
         'Access-Control-Allow-Origin': '*',
       },
     });
-  } catch (e) {
-    return new Response(`Error: ${e.message}`, { status: 500 });
+  } catch {
+    return new Response('Internal error', { status: 500 });
   }
 }
