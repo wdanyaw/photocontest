@@ -22,7 +22,8 @@ export async function onRequestGet({ params, env }) {
 
     // 2. Скачиваем файл через crm.controller.item.getFile
     const webhookUrl = env.BITRIX_WEBHOOK_URL.replace(/\/$/, '');
-    const fileUrl = `${webhookUrl}/crm.controller.item.getFile/?entityTypeId=${env.ENTITY_TYPE_ID}&id=${id}&fieldName=${env.FIELD_PHOTO}&fileId=${fileId}`;
+    const fieldNameForApi = env.FIELD_PHOTO.replace(/^ufCrm(\d+)_/, (_, n) => `UF_CRM_${n}_`);
+    const fileUrl = `${webhookUrl}/crm.controller.item.getFile/?entityTypeId=${env.ENTITY_TYPE_ID}&id=${id}&fieldName=${fieldNameForApi}&fileId=${fileId}`;
 
     const photoRes = await fetch(fileUrl);
     if (!photoRes.ok) {
