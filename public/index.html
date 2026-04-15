@@ -361,7 +361,7 @@
 
         return `
           <div class="${cls.join(' ')}" data-id="${escapeHtml(p.id)}">
-            <img class="participant-photo" src="${escapeHtml(p.photoUrl)}" alt="Фото" loading="lazy">
+            <img class="participant-photo" data-src="${escapeHtml(p.photoUrl)}" alt="Фото">
             <div class="participant-body">
               <div class="participant-caption">${escapeHtml(p.caption)}</div>
               <div class="participant-num">Участник №${escapeHtml(p.participantNum)}</div>
@@ -377,6 +377,15 @@
       app.querySelectorAll('[data-vote]').forEach(btn => {
         btn.addEventListener('click', () => handleVote(btn.dataset.vote));
       });
+
+      // Загружаем фото последовательно с паузой — Bitrix24 лимит 2 req/sec
+      const imgs = Array.from(app.querySelectorAll('img[data-src]'));
+      (async () => {
+        for (const img of imgs) {
+          img.src = img.dataset.src;
+          await new Promise(r => setTimeout(r, 600));
+        }
+      })();
     }
 
     async function handleVote(participantId) {
@@ -417,7 +426,7 @@
       const html = state.contests.map(c => {
         const winnersHtml = c.winners.map(w => `
           <div class="winner-card">
-            <img class="winner-photo" src="${escapeHtml(w.photoUrl)}" alt="Фото">
+            <img class="winner-photo" data-src="${escapeHtml(w.photoUrl)}" alt="Фото">
             <div class="winner-info">
               <div class="row"><span class="label">Подпись:</span> ${escapeHtml(w.caption)}</div>
               <div class="row"><span class="label">Участник:</span> №${escapeHtml(w.participantNum)}</div>
@@ -439,6 +448,15 @@
       }).join('');
 
       app.innerHTML = html;
+
+      // Загружаем фото победителей последовательно
+      const imgs = Array.from(app.querySelectorAll('img[data-src]'));
+      (async () => {
+        for (const img of imgs) {
+          img.src = img.dataset.src;
+          await new Promise(r => setTimeout(r, 600));
+        }
+      })();
     }
 
     // ===== Загрузчики данных =====
