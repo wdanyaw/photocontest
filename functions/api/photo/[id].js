@@ -1,37 +1,46 @@
 // GET /api/photo/:id — прокси для файла-фото с элемента смарт-процесса.
 // Скрывает URL вебхука от клиента. Кэширует на 1 день.
 
-import { bitrix } from '../_bitrix.js';
-
 export async function onRequestGet({ params, env }) {
   try {
     const id = params.id;
-    const item = await bitrix(env, 'crm.item.get', {
-      entityTypeId: env.ENTITY_TYPE_ID,
-      id,
-    });
 
-    const photoField = item.item?.[env.FIELD_PHOTO];
-    const file = Array.isArray(photoField) ? photoField[0] : photoField;
-    if (!file) return new Response('Not found', { status: 404 });
+    // Получаем файл напрямую через crm.controller.item.getFile
+    const webhookUrl = env.BITRIX_WEBHOOK_URL.replace(/\/$/, '');
+    const fileUrl = `${webhookUrl}/crm.controller.item.getFile/?entityTypeId=${env.ENTITY_TYPE_ID}&id=${id}&fieldName=${env.FIELD_PHOTO}`;
 
-    // Bitrix24 возвращает urlMachine (относительный URL) или downloadUrl.
-    // urlMachine чаще всего требует ту же авторизацию что и вебхук.
-    const rawUrl = file.urlMachine || file.downloadUrl || file.url;
-    if (!rawUrl) return new Response('Нет URL для файла', { status: 500 });
-
-    // Если URL относительный, подставляем домен из вебхука
-    const portalOrigin = new URL(env.BITRIX_WEBHOOK_URL).origin;
-    const fullUrl = rawUrl.startsWith('http') ? rawUrl : `${portalOrigin}${rawUrl}`;
-
-    const photoRes = await fetch(fullUrl);
+    const photoRes = await fetch(fileUrl);
     if (!photoRes.ok) {
       return new Response(`Ошибка загрузки фото: ${photoRes.status}`, { status: 502 });
     }
 
+    const contentType = photoRes.headers.get('Content-Type') || '';
+
+    // Если вернулся JSON — значит это не файл, а ошибка или редирект
+    if (contentType.includes('application/json')) {
+      const json = await photoRes.json();
+      // Bitrix24 может вернуть {result: {url: "..."}} или редирект-ссылку
+      const downloadUrl = json?.result?.url || json?.result?.urlMachine || json?.result;
+      if (typeof downloadUrl === 'string' && downloadUrl.startsWith('http')) {
+        const fileRes = await fetch(downloadUrl);
+        if (!fileRes.ok) {
+          return new Response(`Ошибка загрузки файла: ${fileRes.status}`, { status: 502 });
+        }
+        return new Response(fileRes.body, {
+          headers: {
+            'Content-Type': fileRes.headers.get('Content-Type') || 'image/jpeg',
+            'Cache-Control': 'public, max-age=86400',
+            'Access-Control-Allow-Origin': '*',
+          },
+        });
+      }
+      return new Response('Не удалось получить URL файла', { status: 500 });
+    }
+
+    // Файл получен напрямую
     return new Response(photoRes.body, {
       headers: {
-        'Content-Type': photoRes.headers.get('Content-Type') || 'image/jpeg',
+        'Content-Type': contentType || 'image/jpeg',
         'Cache-Control': 'public, max-age=86400',
         'Access-Control-Allow-Origin': '*',
       },
