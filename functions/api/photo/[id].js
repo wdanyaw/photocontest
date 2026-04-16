@@ -4,9 +4,15 @@
 
 import { bitrix, bxField } from '../_bitrix.js';
 
-export async function onRequestGet({ params, env }) {
+export async function onRequestGet({ params, env, request, waitUntil }) {
   try {
     const id = params.id;
+
+    // 0. Проверяем Cloudflare Cache API
+    const cache = caches.default;
+    const cacheKey = new Request(`https://photo-cache/${id}`);
+    const cachedRes = await cache.match(cacheKey);
+    if (cachedRes) return cachedRes;
 
     // 1. Пробуем взять fileId из кэша D1
     let fileId = null;
@@ -53,13 +59,18 @@ export async function onRequestGet({ params, env }) {
     const contentType = photoRes.headers.get('Content-Type') || 'image/jpeg';
     const buffer = await photoRes.arrayBuffer();
 
-    return new Response(buffer, {
+    const response = new Response(buffer, {
       headers: {
         'Content-Type': contentType.includes('image') ? contentType : 'image/jpeg',
         'Cache-Control': 'public, max-age=86400',
         'Access-Control-Allow-Origin': '*',
       },
     });
+
+    // Сохраняем в Cloudflare Cache на 24 часа
+    waitUntil(cache.put(cacheKey, response.clone()));
+
+    return response;
   } catch {
     return new Response('Internal error', { status: 500 });
   }

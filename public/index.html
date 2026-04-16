@@ -64,15 +64,13 @@
       margin-bottom: 16px;
     }
 
-    /* Фаза VOTING — сетка 2 колонки */
+    /* Фаза VOTING — одна колонка */
     .grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      display: flex;
+      flex-direction: column;
       gap: 16px;
-    }
-
-    @media (max-width: 600px) {
-      .grid { grid-template-columns: 1fr; }
+      max-width: 600px;
+      margin: 0 auto;
     }
 
     .participant {
@@ -90,17 +88,18 @@
 
     .participant-photo {
       width: 100%;
-      aspect-ratio: 4/3;
-      object-fit: cover;
+      height: auto;
       display: block;
       background: linear-gradient(90deg, #e8e8e8 25%, #f0f0f0 50%, #e8e8e8 75%);
       background-size: 200% 100%;
       animation: skeleton 1.4s infinite;
+      min-height: 120px;
     }
 
     .participant-photo.loaded {
       background: none;
       animation: none;
+      min-height: unset;
     }
 
     .winner-photo {
@@ -468,7 +467,11 @@
 
     function renderVoting() {
       setSubtitle(state.userVote ? 'Ваш голос учтён' : 'Проголосуйте за лучшую работу');
-      const participants = shuffle(state.participants);
+      const participants = state.participants.slice().sort((a, b) => {
+        const na = Number(a.participantNum) || 0;
+        const nb = Number(b.participantNum) || 0;
+        return na - nb;
+      });
 
       if (participants.length === 0) {
         app.innerHTML = `<div class="empty">Участников в текущем конкурсе пока нет.</div>${owlHtml()}`;
