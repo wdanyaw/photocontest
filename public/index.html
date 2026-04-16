@@ -226,7 +226,7 @@
       font-weight: 600;
     }
 
-    /* CSS-сова (пиксель-арт) */
+    /* SVG-сова */
     .owl-wrap {
       display: flex;
       flex-direction: column;
@@ -235,102 +235,25 @@
       user-select: none;
     }
 
-    .owl {
-      image-rendering: pixelated;
-      width: 128px;
-      height: 128px;
-      position: relative;
+    .owl-svg {
+      width: 160px;
+      height: 180px;
     }
 
-    /* Сова нарисована через box-shadow от одного пикселя 8x8 */
-    .owl-pixel {
-      width: 8px;
-      height: 8px;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
-    /* Тело совы — статичное */
-    .owl-body {
-      box-shadow:
-        /* Уши */
-        16px 8px 0 #5a3e1b, 24px 8px 0 #5a3e1b,
-        80px 8px 0 #5a3e1b, 88px 8px 0 #5a3e1b,
-        8px 16px 0 #5a3e1b, 16px 16px 0 #7a5230, 24px 16px 0 #7a5230,
-        80px 16px 0 #7a5230, 88px 16px 0 #7a5230, 96px 16px 0 #5a3e1b,
-        /* Голова */
-        8px 24px 0 #7a5230, 16px 24px 0 #9e6b3f, 24px 24px 0 #9e6b3f, 32px 24px 0 #9e6b3f,
-        40px 24px 0 #9e6b3f, 48px 24px 0 #9e6b3f, 56px 24px 0 #9e6b3f, 64px 24px 0 #9e6b3f,
-        72px 24px 0 #9e6b3f, 80px 24px 0 #9e6b3f, 88px 24px 0 #9e6b3f, 96px 24px 0 #7a5230,
-        8px 32px 0 #9e6b3f, 16px 32px 0 #c8975a, 24px 32px 0 #c8975a, 32px 32px 0 #c8975a,
-        40px 32px 0 #c8975a, 48px 32px 0 #c8975a, 56px 32px 0 #c8975a, 64px 32px 0 #c8975a,
-        72px 32px 0 #c8975a, 80px 32px 0 #c8975a, 88px 32px 0 #c8975a, 96px 32px 0 #9e6b3f,
-        /* Лицо — верхний ряд */
-        8px 40px 0 #9e6b3f, 16px 40px 0 #c8975a, 24px 40px 0 #f0d090,
-        32px 40px 0 #f0d090, 40px 40px 0 #c8975a, 48px 40px 0 #c8975a,
-        56px 40px 0 #c8975a, 64px 40px 0 #f0d090, 72px 40px 0 #f0d090,
-        80px 40px 0 #c8975a, 88px 40px 0 #c8975a, 96px 40px 0 #9e6b3f,
-        /* Нос */
-        48px 56px 0 #e8a020, 56px 56px 0 #e8a020,
-        48px 64px 0 #c8800a, 56px 64px 0 #c8800a,
-        /* Тело */
-        8px 72px 0 #7a5230, 16px 72px 0 #9e6b3f, 24px 72px 0 #9e6b3f,
-        32px 72px 0 #c8975a, 40px 72px 0 #c8975a, 48px 72px 0 #9e6b3f,
-        56px 72px 0 #9e6b3f, 64px 72px 0 #c8975a, 72px 72px 0 #c8975a,
-        80px 72px 0 #9e6b3f, 88px 72px 0 #9e6b3f, 96px 72px 0 #7a5230,
-        8px 80px 0 #7a5230, 16px 80px 0 #9e6b3f, 24px 80px 0 #c8975a,
-        32px 80px 0 #c8975a, 40px 80px 0 #9e6b3f, 48px 80px 0 #9e6b3f,
-        56px 80px 0 #9e6b3f, 64px 80px 0 #9e6b3f, 72px 80px 0 #c8975a,
-        80px 80px 0 #c8975a, 88px 80px 0 #9e6b3f, 96px 80px 0 #7a5230,
-        8px 88px 0 #5a3e1b, 16px 88px 0 #7a5230, 24px 88px 0 #9e6b3f,
-        32px 88px 0 #9e6b3f, 40px 88px 0 #c8975a, 48px 88px 0 #c8975a,
-        56px 88px 0 #c8975a, 64px 88px 0 #c8975a, 72px 88px 0 #9e6b3f,
-        80px 88px 0 #9e6b3f, 88px 88px 0 #7a5230, 96px 88px 0 #5a3e1b,
-        /* Лапы */
-        24px 96px 0 #7a5230, 32px 96px 0 #7a5230, 40px 96px 0 #5a3e1b,
-        64px 96px 0 #5a3e1b, 72px 96px 0 #7a5230, 80px 96px 0 #7a5230,
-        16px 104px 0 #e8a020, 24px 104px 0 #e8a020, 32px 104px 0 #e8a020,
-        40px 104px 0 #e8a020, 64px 104px 0 #e8a020, 72px 104px 0 #e8a020,
-        80px 104px 0 #e8a020, 88px 104px 0 #e8a020;
-    }
-
-    /* Глаза — анимируются */
-    .owl-eyes {
+    /* Моргание — верхние веки опускаются */
+    .owl-eyelid-left,
+    .owl-eyelid-right {
+      transform-origin: center top;
       animation: blink 4s infinite;
     }
 
-    /* Открытые глаза */
-    .owl-eyes {
-      box-shadow:
-        /* Левый глаз */
-        16px 40px 0 #1a1a1a, 24px 40px 0 #1a1a1a,
-        16px 48px 0 #1a1a1a, 24px 48px 0 #ffffff, 32px 48px 0 #1a1a1a,
-        16px 56px 0 #1a1a1a, 24px 56px 0 #1a1a1a,
-        /* Правый глаз */
-        72px 40px 0 #1a1a1a, 80px 40px 0 #1a1a1a,
-        64px 48px 0 #1a1a1a, 72px 48px 0 #ffffff, 80px 48px 0 #1a1a1a,
-        72px 56px 0 #1a1a1a, 80px 56px 0 #1a1a1a;
+    .owl-eyelid-right {
+      animation-delay: 0.04s;
     }
 
     @keyframes blink {
-      0%, 90%, 100% {
-        box-shadow:
-          16px 40px 0 #1a1a1a, 24px 40px 0 #1a1a1a,
-          16px 48px 0 #1a1a1a, 24px 48px 0 #ffffff, 32px 48px 0 #1a1a1a,
-          16px 56px 0 #1a1a1a, 24px 56px 0 #1a1a1a,
-          72px 40px 0 #1a1a1a, 80px 40px 0 #1a1a1a,
-          64px 48px 0 #1a1a1a, 72px 48px 0 #ffffff, 80px 48px 0 #1a1a1a,
-          72px 56px 0 #1a1a1a, 80px 56px 0 #1a1a1a;
-      }
-      /* Моргание — глаза закрыты */
-      93%, 97% {
-        box-shadow:
-          16px 48px 0 #9e6b3f, 24px 48px 0 #9e6b3f, 32px 48px 0 #9e6b3f,
-          64px 48px 0 #9e6b3f, 72px 48px 0 #9e6b3f, 80px 48px 0 #9e6b3f,
-          16px 50px 0 #5a3e1b, 24px 50px 0 #5a3e1b, 32px 50px 0 #5a3e1b,
-          64px 50px 0 #5a3e1b, 72px 50px 0 #5a3e1b, 80px 50px 0 #5a3e1b;
-      }
+      0%, 88%, 100% { transform: scaleY(0); }
+      92%, 96%      { transform: scaleY(1); }
     }
 
     .owl-label {
@@ -443,10 +366,64 @@
     function owlHtml() {
       return `
         <div class="owl-wrap">
-          <div class="owl">
-            <div class="owl-pixel owl-body"></div>
-            <div class="owl-pixel owl-eyes"></div>
-          </div>
+          <svg class="owl-svg" viewBox="0 0 160 180" xmlns="http://www.w3.org/2000/svg">
+            <!-- Тело — пушистый белый/серый овал -->
+            <ellipse cx="80" cy="130" rx="46" ry="48" fill="#e8e8e8"/>
+            <ellipse cx="80" cy="128" rx="36" ry="40" fill="#f5f5f5"/>
+            <!-- Крылья -->
+            <ellipse cx="36" cy="138" rx="22" ry="32" fill="#b0b0b0" transform="rotate(-12 36 138)"/>
+            <ellipse cx="124" cy="138" rx="22" ry="32" fill="#b0b0b0" transform="rotate(12 124 138)"/>
+            <!-- Внутренняя грудка -->
+            <ellipse cx="80" cy="140" rx="24" ry="30" fill="#f8f8f8"/>
+            <!-- Голова -->
+            <ellipse cx="80" cy="72" rx="42" ry="40" fill="#d0d0d0"/>
+            <ellipse cx="80" cy="72" rx="34" ry="33" fill="#e4e4e4"/>
+            <!-- Ушки-рожки -->
+            <polygon points="52,38 44,14 60,34" fill="#b0b0b0"/>
+            <polygon points="108,38 116,14 100,34" fill="#b0b0b0"/>
+            <polygon points="53,36 47,18 59,33" fill="#c8c8c8"/>
+            <polygon points="107,36 113,18 101,33" fill="#c8c8c8"/>
+            <!-- Белые пятна вокруг глаз -->
+            <circle cx="62" cy="72" r="20" fill="#f5f5f5"/>
+            <circle cx="98" cy="72" r="20" fill="#f5f5f5"/>
+            <!-- Оправа очков — жёлтая -->
+            <circle cx="62" cy="72" r="17" fill="none" stroke="#f0c020" stroke-width="4"/>
+            <circle cx="98" cy="72" r="17" fill="none" stroke="#f0c020" stroke-width="4"/>
+            <!-- Перемычка очков -->
+            <path d="M79 72 Q80 68 81 72" fill="none" stroke="#f0c020" stroke-width="3"/>
+            <!-- Дужки очков -->
+            <path d="M45 67 Q36 62 34 66" fill="none" stroke="#f0c020" stroke-width="3" stroke-linecap="round"/>
+            <path d="M115 67 Q124 62 126 66" fill="none" stroke="#f0c020" stroke-width="3" stroke-linecap="round"/>
+            <!-- Радужка — янтарная -->
+            <circle cx="62" cy="72" r="12" fill="#d4820a"/>
+            <circle cx="98" cy="72" r="12" fill="#d4820a"/>
+            <!-- Зрачок -->
+            <circle cx="62" cy="72" r="7" fill="#1a1a1a"/>
+            <circle cx="98" cy="72" r="7" fill="#1a1a1a"/>
+            <!-- Блик в глазу -->
+            <circle cx="66" cy="68" r="3" fill="white" opacity="0.9"/>
+            <circle cx="102" cy="68" r="3" fill="white" opacity="0.9"/>
+            <!-- Веки (моргание) — анимированы через CSS -->
+            <clipPath id="leftEyeClip">
+              <circle cx="62" cy="72" r="16"/>
+            </clipPath>
+            <clipPath id="rightEyeClip">
+              <circle cx="98" cy="72" r="16"/>
+            </clipPath>
+            <rect class="owl-eyelid-left" x="46" y="56" width="32" height="16" rx="2"
+              fill="#d8d8d8" clip-path="url(#leftEyeClip)"/>
+            <rect class="owl-eyelid-right" x="82" y="56" width="32" height="16" rx="2"
+              fill="#d8d8d8" clip-path="url(#rightEyeClip)"/>
+            <!-- Клюв -->
+            <polygon points="80,83 74,95 86,95" fill="#c8780a"/>
+            <polygon points="80,83 74,90 86,90" fill="#e8960e"/>
+            <!-- Лапы -->
+            <rect x="62" y="172" width="7" height="10" rx="2" fill="#c8780a"/>
+            <rect x="72" y="172" width="7" height="10" rx="2" fill="#c8780a"/>
+            <rect x="81" y="172" width="7" height="10" rx="2" fill="#c8780a"/>
+            <rect x="91" y="172" width="7" height="10" rx="2" fill="#c8780a"/>
+            <rect x="60" y="168" width="36" height="8" rx="3" fill="#d4880c"/>
+          </svg>
           <div class="owl-label">Скоро что-то будет...</div>
         </div>
       `;
