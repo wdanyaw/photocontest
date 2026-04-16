@@ -27,6 +27,23 @@ export async function onRequestGet({ env, data }) {
       if (voteRow) userVote = voteRow.participant_id;
     }
 
+    // Прогреваем кэш fileId — один batch-запрос к D1 вместо N запросов к Bitrix24
+    const cacheInserts = [];
+    for (const item of items) {
+      const photoField = bxField(item, env.FIELD_PHOTO);
+      const file = Array.isArray(photoField) ? photoField[0] : photoField;
+      if (file?.id) {
+        cacheInserts.push(
+          env.DB.prepare(
+            'INSERT OR REPLACE INTO photo_cache (participant_id, file_id) VALUES (?, ?)'
+          ).bind(String(item.id), String(file.id))
+        );
+      }
+    }
+    if (cacheInserts.length > 0) {
+      await env.DB.batch(cacheInserts);
+    }
+
     const participants = items.map(item => ({
       id: String(item.id),
       photoUrl: `/api/photo/${item.id}?auth_id=${encodeURIComponent(data.authId)}&domain=${encodeURIComponent(data.domain)}`,

@@ -92,8 +92,35 @@
       width: 100%;
       aspect-ratio: 4/3;
       object-fit: cover;
-      background: #eee;
       display: block;
+      background: linear-gradient(90deg, #e8e8e8 25%, #f0f0f0 50%, #e8e8e8 75%);
+      background-size: 200% 100%;
+      animation: skeleton 1.4s infinite;
+    }
+
+    .participant-photo.loaded {
+      background: none;
+      animation: none;
+    }
+
+    .winner-photo {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      background: linear-gradient(90deg, #e8e8e8 25%, #f0f0f0 50%, #e8e8e8 75%);
+      background-size: 200% 100%;
+      animation: skeleton 1.4s infinite;
+    }
+
+    .winner-photo.loaded {
+      background: none;
+      animation: none;
+    }
+
+    @keyframes skeleton {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
 
     .participant-body {
@@ -182,14 +209,6 @@
       font-weight: 600;
       padding: 6px;
       letter-spacing: 0.5px;
-    }
-
-    .winner-photo {
-      width: 100%;
-      aspect-ratio: 4/3;
-      object-fit: cover;
-      background: #eee;
-      display: block;
     }
 
     .winner-info {
@@ -524,12 +543,11 @@
 
     function loadImgsSequentially(container) {
       const imgs = Array.from(container.querySelectorAll('img[data-src]'));
-      (async () => {
-        for (const img of imgs) {
-          img.src = img.dataset.src;
-          await new Promise(r => setTimeout(r, 600));
-        }
-      })();
+      imgs.forEach(img => {
+        img.src = img.dataset.src;
+        img.onload = () => img.classList.add('loaded');
+        img.onerror = () => img.classList.add('loaded');
+      });
     }
 
     async function handleVote(participantId) {
