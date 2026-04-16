@@ -1,5 +1,5 @@
-// GET /api/photo/:id — редирект на файл-фото с элемента смарт-процесса.
-// Вебхук не утекает — клиент получает только временный URL файла.
+// GET /api/photo/:id — прокси для файла-фото с элемента смарт-процесса.
+// Вебхук скрыт полностью — клиент видит только /api/photo/:id.
 // fileId кэшируется в D1 чтобы не ходить в Bitrix24 лишний раз.
 
 import { bitrix, bxField } from '../_bitrix.js';
@@ -36,12 +36,30 @@ export async function onRequestGet({ params, env }) {
       ).bind(id, fileId).run();
     }
 
-    // 2. Строим URL файла и делаем redirect — браузер скачивает напрямую
+    // 2. Скачиваем файл целиком через arrayBuffer — стабильнее стриминга
     const webhookUrl = env.BITRIX_WEBHOOK_URL.replace(/\/$/, '');
     const fieldNameForApi = env.FIELD_PHOTO.replace(/^ufCrm(\d+)_/, (_, n) => `UF_CRM_${n}_`);
     const fileUrl = `${webhookUrl}/crm.controller.item.getFile/?entityTypeId=${env.ENTITY_TYPE_ID}&id=${id}&fieldName=${fieldNameForApi}&fileId=${fileId}`;
 
-    return Response.redirect(fileUrl, 302);
+    const photoRes = await fetch(fileUrl);
+    if (!photoRes.ok) {
+      // Кэш мог устареть — сбрасываем
+      if (cached) {
+        await env.DB.prepare('DELETE FROM photo_cache WHERE participant_id = ?').bind(id).run();
+      }
+      return new Response('Ошибка загрузки фото', { status: 502 });
+    }
+
+    const contentType = photoRes.headers.get('Content-Type') || 'image/jpeg';
+    const buffer = await photoRes.arrayBuffer();
+
+    return new Response(buffer, {
+      headers: {
+        'Content-Type': contentType.includes('image') ? contentType : 'image/jpeg',
+        'Cache-Control': 'public, max-age=86400',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
   } catch {
     return new Response('Internal error', { status: 500 });
   }

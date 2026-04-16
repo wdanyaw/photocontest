@@ -301,7 +301,7 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>Фотоконкурс</h1>
+      <h1>Фотоконкурс <span id="contest-num" style="color:var(--muted);font-weight:400;font-size:18px;"></span></h1>
       <div class="subtitle" id="subtitle">Загрузка...</div>
     </div>
     <div id="app">
@@ -318,12 +318,17 @@
       phase: null,
       participants: [],
       userVote: null,
+      contestNum: null,
     };
 
     const app = document.getElementById('app');
     const subtitle = document.getElementById('subtitle');
+    const contestNumEl = document.getElementById('contest-num');
 
     function setSubtitle(text) { subtitle.textContent = text; }
+    function setContestNum(num) {
+      contestNumEl.textContent = num ? `№${num}` : '';
+    }
 
     function showError(msg) {
       app.innerHTML = `<div class="error">${escapeHtml(msg)}</div>`;
@@ -614,6 +619,8 @@
       try {
         const status = await apiGet('/api/status');
         state.phase = status.phase;
+        state.contestNum = status.contestNum;
+        setContestNum(state.contestNum);
 
         if (state.phase === 'VOTING') {
           await loadVoting();
