@@ -88,10 +88,6 @@
       border-color: var(--success);
     }
 
-    .participant.is-winner {
-      border-color: var(--warning);
-    }
-
     .participant-photo {
       width: 100%;
       aspect-ratio: 4/3;
@@ -114,12 +110,6 @@
       color: var(--muted);
       font-size: 13px;
       margin-bottom: 10px;
-    }
-
-    .participant-name {
-      font-weight: 600;
-      font-size: 14px;
-      margin-bottom: 8px;
     }
 
     .participant-votes {
@@ -152,63 +142,201 @@
       color: white;
     }
 
-    /* Фаза ARCHIVE */
-    .archive-empty {
+    /* Фаза RESULTS */
+    .results-header {
       text-align: center;
-      padding: 40px 20px;
+      margin-bottom: 24px;
+    }
+
+    .results-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .results-subtitle {
       color: var(--muted);
-      font-size: 16px;
-      background: var(--card);
-      border-radius: var(--radius);
-      margin-bottom: 20px;
+      font-size: 14px;
     }
 
-    .contest {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 20px;
-      margin-bottom: 16px;
-    }
-
-    .contest-header {
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 10px;
-      margin-bottom: 16px;
-      font-weight: 600;
-      font-size: 15px;
-    }
-
-    .contest-date { color: var(--muted); font-weight: 400; }
-
-    .winners-row {
+    .winners-grid {
       display: grid;
-      gap: 16px;
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
     }
 
     .winner-card {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
+      background: var(--card);
+      border: 3px solid var(--warning);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(224,154,43,0.15);
+    }
+
+    .winner-badge {
+      background: var(--warning);
+      color: white;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px;
+      letter-spacing: 0.5px;
     }
 
     .winner-photo {
-      width: 160px;
-      height: 120px;
+      width: 100%;
+      aspect-ratio: 4/3;
       object-fit: cover;
-      border-radius: 8px;
-      flex-shrink: 0;
       background: #eee;
+      display: block;
     }
 
-    .winner-info { flex: 1; font-size: 14px; }
-    .winner-info .row { margin: 3px 0; }
-    .winner-info .label { color: var(--muted); }
+    .winner-info {
+      padding: 14px 16px;
+      font-size: 14px;
+    }
 
-    @media (max-width: 500px) {
-      .winner-card { flex-direction: column; }
-      .winner-photo { width: 100%; height: auto; aspect-ratio: 4/3; }
+    .winner-caption {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .winner-meta {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 3px 0;
+    }
+
+    .winner-name {
+      font-weight: 600;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    .winner-votes {
+      display: inline-block;
+      margin-top: 8px;
+      background: var(--warning);
+      color: white;
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* CSS-сова (пиксель-арт) */
+    .owl-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 32px;
+      user-select: none;
+    }
+
+    .owl {
+      image-rendering: pixelated;
+      width: 128px;
+      height: 128px;
+      position: relative;
+    }
+
+    /* Сова нарисована через box-shadow от одного пикселя 8x8 */
+    .owl-pixel {
+      width: 8px;
+      height: 8px;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    /* Тело совы — статичное */
+    .owl-body {
+      box-shadow:
+        /* Уши */
+        16px 8px 0 #5a3e1b, 24px 8px 0 #5a3e1b,
+        80px 8px 0 #5a3e1b, 88px 8px 0 #5a3e1b,
+        8px 16px 0 #5a3e1b, 16px 16px 0 #7a5230, 24px 16px 0 #7a5230,
+        80px 16px 0 #7a5230, 88px 16px 0 #7a5230, 96px 16px 0 #5a3e1b,
+        /* Голова */
+        8px 24px 0 #7a5230, 16px 24px 0 #9e6b3f, 24px 24px 0 #9e6b3f, 32px 24px 0 #9e6b3f,
+        40px 24px 0 #9e6b3f, 48px 24px 0 #9e6b3f, 56px 24px 0 #9e6b3f, 64px 24px 0 #9e6b3f,
+        72px 24px 0 #9e6b3f, 80px 24px 0 #9e6b3f, 88px 24px 0 #9e6b3f, 96px 24px 0 #7a5230,
+        8px 32px 0 #9e6b3f, 16px 32px 0 #c8975a, 24px 32px 0 #c8975a, 32px 32px 0 #c8975a,
+        40px 32px 0 #c8975a, 48px 32px 0 #c8975a, 56px 32px 0 #c8975a, 64px 32px 0 #c8975a,
+        72px 32px 0 #c8975a, 80px 32px 0 #c8975a, 88px 32px 0 #c8975a, 96px 32px 0 #9e6b3f,
+        /* Лицо — верхний ряд */
+        8px 40px 0 #9e6b3f, 16px 40px 0 #c8975a, 24px 40px 0 #f0d090,
+        32px 40px 0 #f0d090, 40px 40px 0 #c8975a, 48px 40px 0 #c8975a,
+        56px 40px 0 #c8975a, 64px 40px 0 #f0d090, 72px 40px 0 #f0d090,
+        80px 40px 0 #c8975a, 88px 40px 0 #c8975a, 96px 40px 0 #9e6b3f,
+        /* Нос */
+        48px 56px 0 #e8a020, 56px 56px 0 #e8a020,
+        48px 64px 0 #c8800a, 56px 64px 0 #c8800a,
+        /* Тело */
+        8px 72px 0 #7a5230, 16px 72px 0 #9e6b3f, 24px 72px 0 #9e6b3f,
+        32px 72px 0 #c8975a, 40px 72px 0 #c8975a, 48px 72px 0 #9e6b3f,
+        56px 72px 0 #9e6b3f, 64px 72px 0 #c8975a, 72px 72px 0 #c8975a,
+        80px 72px 0 #9e6b3f, 88px 72px 0 #9e6b3f, 96px 72px 0 #7a5230,
+        8px 80px 0 #7a5230, 16px 80px 0 #9e6b3f, 24px 80px 0 #c8975a,
+        32px 80px 0 #c8975a, 40px 80px 0 #9e6b3f, 48px 80px 0 #9e6b3f,
+        56px 80px 0 #9e6b3f, 64px 80px 0 #9e6b3f, 72px 80px 0 #c8975a,
+        80px 80px 0 #c8975a, 88px 80px 0 #9e6b3f, 96px 80px 0 #7a5230,
+        8px 88px 0 #5a3e1b, 16px 88px 0 #7a5230, 24px 88px 0 #9e6b3f,
+        32px 88px 0 #9e6b3f, 40px 88px 0 #c8975a, 48px 88px 0 #c8975a,
+        56px 88px 0 #c8975a, 64px 88px 0 #c8975a, 72px 88px 0 #9e6b3f,
+        80px 88px 0 #9e6b3f, 88px 88px 0 #7a5230, 96px 88px 0 #5a3e1b,
+        /* Лапы */
+        24px 96px 0 #7a5230, 32px 96px 0 #7a5230, 40px 96px 0 #5a3e1b,
+        64px 96px 0 #5a3e1b, 72px 96px 0 #7a5230, 80px 96px 0 #7a5230,
+        16px 104px 0 #e8a020, 24px 104px 0 #e8a020, 32px 104px 0 #e8a020,
+        40px 104px 0 #e8a020, 64px 104px 0 #e8a020, 72px 104px 0 #e8a020,
+        80px 104px 0 #e8a020, 88px 104px 0 #e8a020;
+    }
+
+    /* Глаза — анимируются */
+    .owl-eyes {
+      animation: blink 4s infinite;
+    }
+
+    /* Открытые глаза */
+    .owl-eyes {
+      box-shadow:
+        /* Левый глаз */
+        16px 40px 0 #1a1a1a, 24px 40px 0 #1a1a1a,
+        16px 48px 0 #1a1a1a, 24px 48px 0 #ffffff, 32px 48px 0 #1a1a1a,
+        16px 56px 0 #1a1a1a, 24px 56px 0 #1a1a1a,
+        /* Правый глаз */
+        72px 40px 0 #1a1a1a, 80px 40px 0 #1a1a1a,
+        64px 48px 0 #1a1a1a, 72px 48px 0 #ffffff, 80px 48px 0 #1a1a1a,
+        72px 56px 0 #1a1a1a, 80px 56px 0 #1a1a1a;
+    }
+
+    @keyframes blink {
+      0%, 90%, 100% {
+        box-shadow:
+          16px 40px 0 #1a1a1a, 24px 40px 0 #1a1a1a,
+          16px 48px 0 #1a1a1a, 24px 48px 0 #ffffff, 32px 48px 0 #1a1a1a,
+          16px 56px 0 #1a1a1a, 24px 56px 0 #1a1a1a,
+          72px 40px 0 #1a1a1a, 80px 40px 0 #1a1a1a,
+          64px 48px 0 #1a1a1a, 72px 48px 0 #ffffff, 80px 48px 0 #1a1a1a,
+          72px 56px 0 #1a1a1a, 80px 56px 0 #1a1a1a;
+      }
+      /* Моргание — глаза закрыты */
+      93%, 97% {
+        box-shadow:
+          16px 48px 0 #9e6b3f, 24px 48px 0 #9e6b3f, 32px 48px 0 #9e6b3f,
+          64px 48px 0 #9e6b3f, 72px 48px 0 #9e6b3f, 80px 48px 0 #9e6b3f,
+          16px 50px 0 #5a3e1b, 24px 50px 0 #5a3e1b, 32px 50px 0 #5a3e1b,
+          64px 50px 0 #5a3e1b, 72px 50px 0 #5a3e1b, 80px 50px 0 #5a3e1b;
+      }
+    }
+
+    .owl-label {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
     }
 
     .toast {
@@ -242,14 +370,12 @@
   <script>
     'use strict';
 
-    // Состояние приложения
     const state = {
       authId: null,
       domain: null,
       phase: null,
       participants: [],
       userVote: null,
-      contests: [],
     };
 
     const app = document.getElementById('app');
@@ -276,12 +402,8 @@
       setTimeout(() => el.remove(), 3000);
     }
 
-    // Базовые параметры для всех запросов к бэкенду
     function authParams() {
-      return {
-        auth_id: state.authId,
-        domain: state.domain,
-      };
+      return { auth_id: state.authId, domain: state.domain };
     }
 
     async function apiGet(path) {
@@ -309,7 +431,6 @@
       return data;
     }
 
-    // Шаффл массива (Fisher-Yates) — чтобы порядок участников не давал преимущество
     function shuffle(arr) {
       const a = arr.slice();
       for (let i = a.length - 1; i > 0; i--) {
@@ -319,14 +440,16 @@
       return a;
     }
 
-    // Форматирование даты: "15 апреля 2026"
-    const MONTHS = ['января','февраля','марта','апреля','мая','июня',
-                    'июля','августа','сентября','октября','ноября','декабря'];
-    function formatDate(iso) {
-      if (!iso) return '';
-      const d = new Date(iso);
-      if (isNaN(d)) return iso;
-      return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+    function owlHtml() {
+      return `
+        <div class="owl-wrap">
+          <div class="owl">
+            <div class="owl-pixel owl-body"></div>
+            <div class="owl-pixel owl-eyes"></div>
+          </div>
+          <div class="owl-label">Скоро что-то будет...</div>
+        </div>
+      `;
     }
 
     // ===== Рендер фаз =====
@@ -338,6 +461,7 @@
           <h2 style="margin-top:0;">Конкурс скоро начнётся</h2>
           <p>Сейчас активных голосований нет. Дождитесь сообщения в чате со ссылкой.</p>
         </div>
+        ${owlHtml()}
       `;
     }
 
@@ -346,7 +470,7 @@
       const participants = shuffle(state.participants);
 
       if (participants.length === 0) {
-        app.innerHTML = `<div class="empty">Участников в текущем конкурсе пока нет.</div>`;
+        app.innerHTML = `<div class="empty">Участников в текущем конкурсе пока нет.</div>${owlHtml()}`;
         return;
       }
 
@@ -364,7 +488,7 @@
             <img class="participant-photo" data-src="${escapeHtml(p.photoUrl)}" alt="Фото">
             <div class="participant-body">
               <div class="participant-caption">${escapeHtml(p.caption)}</div>
-              <div class="participant-num">Участник №${escapeHtml(p.participantNum)}</div>
+              <div class="participant-num">Участник №${escapeHtml(String(p.participantNum))}</div>
               <div class="participant-votes">Голосов: ${p.voteCount}</div>
               <button class="${btnCls}" ${disabled} data-vote="${escapeHtml(p.id)}">${btnLabel}</button>
             </div>
@@ -378,8 +502,51 @@
         btn.addEventListener('click', () => handleVote(btn.dataset.vote));
       });
 
-      // Загружаем фото последовательно с паузой — Bitrix24 лимит 2 req/sec
-      const imgs = Array.from(app.querySelectorAll('img[data-src]'));
+      loadImgsSequentially(app);
+    }
+
+    function renderResults() {
+      const winners = state.participants.filter(p => p.isWinner);
+      const contestNum = state.participants[0]?.contestNum ?? '';
+      const count = winners.length;
+      const title = count > 1 ? `Победители конкурса №${contestNum}` : `Победитель конкурса №${contestNum}`;
+
+      setSubtitle('Голосование завершено');
+
+      if (winners.length === 0) {
+        app.innerHTML = `
+          <div class="empty">Голосование завершено. Победители определяются...</div>
+          ${owlHtml()}
+        `;
+        return;
+      }
+
+      const winnersHtml = winners.map(w => `
+        <div class="winner-card">
+          <div class="winner-badge">ПОБЕДИТЕЛЬ</div>
+          <img class="winner-photo" data-src="${escapeHtml(w.photoUrl)}" alt="Фото">
+          <div class="winner-info">
+            <div class="winner-caption">${escapeHtml(w.caption)}</div>
+            <div class="winner-meta">Участник №${escapeHtml(String(w.participantNum))}</div>
+            <div class="winner-name">${escapeHtml(w.name || '')}</div>
+            <span class="winner-votes">Голосов: ${w.voteCount}</span>
+          </div>
+        </div>
+      `).join('');
+
+      app.innerHTML = `
+        <div class="results-header">
+          <div class="results-title">${escapeHtml(title)}</div>
+          <div class="results-subtitle">${count > 1 ? 'Ничья — несколько победителей' : ''}</div>
+        </div>
+        <div class="winners-grid">${winnersHtml}</div>
+      `;
+
+      loadImgsSequentially(app);
+    }
+
+    function loadImgsSequentially(container) {
+      const imgs = Array.from(container.querySelectorAll('img[data-src]'));
       (async () => {
         for (const img of imgs) {
           img.src = img.dataset.src;
@@ -390,14 +557,11 @@
 
     async function handleVote(participantId) {
       if (state.userVote) return;
-
-      // Оптимистично блокируем кнопки
       app.querySelectorAll('.vote-btn').forEach(b => b.disabled = true);
 
       try {
         const result = await apiPost('/api/vote', { participant_id: participantId });
         state.userVote = participantId;
-        // Обновим счётчики в state
         for (const p of state.participants) {
           p.voteCount = result.counts[String(p.id)] || 0;
         }
@@ -410,53 +574,9 @@
           toast('Вы уже голосовали в этом конкурсе', 'error');
         } else {
           toast('Ошибка: ' + e.message, 'error');
-          // Разблокируем кнопки при ошибке
           await loadVoting();
         }
       }
-    }
-
-    function renderArchive() {
-      setSubtitle('Активных конкурсов нет, голосование завершено');
-      if (state.contests.length === 0) {
-        app.innerHTML = `<div class="archive-empty">Архив пока пуст</div>`;
-        return;
-      }
-
-      const html = state.contests.map(c => {
-        const winnersHtml = c.winners.map(w => `
-          <div class="winner-card">
-            <img class="winner-photo" data-src="${escapeHtml(w.photoUrl)}" alt="Фото">
-            <div class="winner-info">
-              <div class="row"><span class="label">Подпись:</span> ${escapeHtml(w.caption)}</div>
-              <div class="row"><span class="label">Участник:</span> №${escapeHtml(w.participantNum)}</div>
-              <div class="row"><span class="label">Голосов:</span> ${w.voteCount}</div>
-              <div class="row"><span class="label">Имя:</span> ${escapeHtml(w.name)}</div>
-            </div>
-          </div>
-        `).join('');
-
-        return `
-          <div class="contest">
-            <div class="contest-header">
-              Конкурс №${escapeHtml(c.contestNum)}
-              <span class="contest-date"> · ${escapeHtml(formatDate(c.date))}</span>
-            </div>
-            <div class="winners-row">${winnersHtml}</div>
-          </div>
-        `;
-      }).join('');
-
-      app.innerHTML = html;
-
-      // Загружаем фото победителей последовательно
-      const imgs = Array.from(app.querySelectorAll('img[data-src]'));
-      (async () => {
-        for (const img of imgs) {
-          img.src = img.dataset.src;
-          await new Promise(r => setTimeout(r, 600));
-        }
-      })();
     }
 
     // ===== Загрузчики данных =====
@@ -468,16 +588,15 @@
       renderVoting();
     }
 
-    async function loadArchive() {
-      const data = await apiGet('/api/winners');
-      state.contests = data.contests;
-      renderArchive();
+    async function loadResults() {
+      const data = await apiGet('/api/participants');
+      state.participants = data.participants;
+      renderResults();
     }
 
     // ===== Точка входа =====
 
     async function init() {
-      // Получаем AUTH_ID через BX24.js
       if (typeof BX24 === 'undefined') {
         showError('Приложение должно быть открыто внутри Bitrix24');
         return;
@@ -503,6 +622,8 @@
 
         if (state.phase === 'VOTING') {
           await loadVoting();
+        } else if (state.phase === 'RESULTS') {
+          await loadResults();
         } else {
           renderIdle();
         }

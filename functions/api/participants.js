@@ -34,6 +34,8 @@ export async function onRequestGet({ env, data }) {
       participantNum: bxField(item, env.FIELD_PARTICIPANT_NUM) ?? null,
       voteCount: Number(bxField(item, env.FIELD_VOTE_COUNT) || 0),
       name: isVoting ? null : (bxField(item, env.FIELD_NAME) || null),
+      isWinner: bxField(item, env.FIELD_IS_WINNER) === 'Y',
+      contestNum: bxField(item, env.FIELD_CONTEST_NUM) ?? null,
     }));
 
     return json({
